@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"
 
 const botTypeClasses = {
   Assault: "icon military",
@@ -7,9 +7,16 @@ const botTypeClasses = {
   Medic: "icon ambulance",
   Witch: "icon magic",
   Captain: "icon star"
-};
+}
 
 const BotCard = props => {
+  const { bot, action } = props
+
+  function handleClick() {
+    action(bot)
+  }
+
+
   return (
     <div className="ui column">
       <div
@@ -17,7 +24,7 @@ const BotCard = props => {
         key={props.bot.id}
         onClick={() => console.log("add code to connect event listener")}
       >
-        <div className="image">
+        <div className="image" onClick={handleClick}>
           <img alt="oh no!" src={props.bot.avatar_url} />
         </div>
         <div className="content">
@@ -58,7 +65,7 @@ const BotCard = props => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default BotCard;
+export default BotCard
