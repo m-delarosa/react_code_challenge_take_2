@@ -23,10 +23,15 @@ class BotsPage extends Component {
       this.setState({ botArmy: [...this.state.botArmy, bot] })
   }
 
+  removeFromArmy = (bot) => {
+    let newCollection = this.state.botArmy.filter(card => card !== bot)
+    this.setState({ botArmy: newCollection })
+  }
+
   render() {
     return (
       <div>
-        <BotArmy bots={this.state.botArmy} />
+        <BotArmy bots={this.state.botArmy} action={this.removeFromArmy} />
         <BotCollection botCollection={this.state.botCollection} action={this.addToArmy} />
       </div>
 

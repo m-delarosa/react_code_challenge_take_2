@@ -12,7 +12,8 @@ const botTypeClasses = {
 const BotCard = props => {
   const { bot, action } = props
 
-  function handleClick() {
+  function handleClick(e) {
+    e.stopPropagation()
     action(bot)
   }
 
