@@ -5,7 +5,7 @@ export default function BotCollection(props) {
   //your code here
 
   const displayBotCards = props.botCollection.map(bot => {
-    return <BotCard bot={bot} action={props.action} />
+    return <BotCard bot={bot} action={props.action} removeCard={props.removeCard} />
   })
 
 
