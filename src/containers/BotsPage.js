@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 import BotCollection from './BotCollection'
+import BotArmy from './YourBotArmy'
 
 
 
@@ -16,10 +17,17 @@ class BotsPage extends Component {
       .then(response => response.json())
       .then(bots => this.setState({ botCollection: bots }))
   }
+
+  addToArmy = (bot) => {
+    if (!this.state.botArmy.find(card => card.id === bot.id))
+      this.setState({ botArmy: [...this.state.botArmy, bot] })
+  }
+
   render() {
     return (
       <div>
-        <BotCollection botCollection={this.state.botCollection} />
+        <BotArmy bots={this.state.botArmy} />
+        <BotCollection botCollection={this.state.botCollection} action={this.addToArmy} />
       </div>
 
     )
