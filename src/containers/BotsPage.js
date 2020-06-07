@@ -33,6 +33,11 @@ class BotsPage extends Component {
     let newArmy = this.state.botArmy.filter(card => card !== bot)
 
     this.setState({ botCollection: newCollection, botArmy: newArmy })
+
+    fetch(`http://localhost:6001/bots/${bot.id}`, {
+      method: 'DELETE'
+    }).then(response => response.json())
+      .then(result => console.log(result))
   }
 
   render() {
