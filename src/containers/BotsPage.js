@@ -12,25 +12,40 @@ class BotsPage extends Component {
     botCollection: [],
     botArmy: [],
     collectionVisible: true,
-    botSpecs: {}
+    botSpecs: {},
+    botArmyClasses: [],
+    botArmyIds: []
   }
 
   componentDidMount() {
     fetch('http://localhost:6001/bots')
       .then(response => response.json())
       .then(bots => this.setState({ botCollection: bots }))
+      .then(console.log("Bots Fetched!"))
   }
 
   addToArmy = (bot) => {
-    if (!this.state.botArmy.find(card => card.id === bot.id)) {
-      let newCollection = this.state.botCollection.filter(card => card !== bot)
-      this.setState({ botCollection: newCollection, botArmy: [...this.state.botArmy, bot] })
-    }
+    let newCollection = this.state.botCollection.filter(card => card.bot_class !== bot.bot_class)
+    this.setState({
+      botCollection: newCollection,
+      botArmy: [...this.state.botArmy, bot],
+      collectionVisible: true,
+      botArmyClasses: [...this.state.botArmyClasses, bot.bot_class],
+      botArmyIds: [...this.state.botArmyIds, bot.id]
+    })
   }
 
   removeFromArmy = (bot) => {
     let newArmy = this.state.botArmy.filter(card => card !== bot)
-    this.setState({ botArmy: newArmy, botCollection: [bot, ...this.state.botCollection] })
+    this.componentDidMount()
+    let newCollection = this.state.botCollection.filter(card => this.state.botArmyIds.includes(card.id) === false)
+    // Not sure how to make the expression below work the way I want it to:
+    // I want it to filter the botCollection and check each id against each id in the botArmy and filter matches out. 
+    // Do I need to create new state that hold the id numbers that just holds the current ids of bots in the bot army?
+    // this.setState({ botArmy: newArmy, botCollection: [this.state.botCollection.filter(card => card.id !== )] })
+    // Or maybe I create an initial bot collection state or variable that doesn't change, and use it to refilter over and over.
+    this.setState({ botArmy: newArmy, botCollection: newCollection })
+    console.log("New collection filtered.")
   }
 
   removeBotPermanently = (bot) => {
