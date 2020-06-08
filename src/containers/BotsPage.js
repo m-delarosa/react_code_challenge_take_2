@@ -22,13 +22,15 @@ class BotsPage extends Component {
   }
 
   addToArmy = (bot) => {
-    if (!this.state.botArmy.find(card => card.id === bot.id))
-      this.setState({ botArmy: [...this.state.botArmy, bot] })
+    if (!this.state.botArmy.find(card => card.id === bot.id)) {
+      let newCollection = this.state.botCollection.filter(card => card !== bot)
+      this.setState({ botCollection: newCollection, botArmy: [...this.state.botArmy, bot] })
+    }
   }
 
   removeFromArmy = (bot) => {
-    let newCollection = this.state.botArmy.filter(card => card !== bot)
-    this.setState({ botArmy: newCollection })
+    let newArmy = this.state.botArmy.filter(card => card !== bot)
+    this.setState({ botArmy: newArmy, botCollection: [bot, ...this.state.botCollection] })
   }
 
   removeBotPermanently = (bot) => {
