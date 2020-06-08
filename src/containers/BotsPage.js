@@ -1,6 +1,7 @@
 import React, { Component } from "react"
 import BotCollection from './BotCollection'
 import BotArmy from './YourBotArmy'
+import BotSpecs from '../components/BotSpecs'
 
 
 
@@ -9,7 +10,9 @@ class BotsPage extends Component {
 
   state = {
     botCollection: [],
-    botArmy: []
+    botArmy: [],
+    collectionVisible: true,
+    botSpecs: {}
   }
 
   componentDidMount() {
@@ -40,11 +43,19 @@ class BotsPage extends Component {
       .then(result => console.log(result))
   }
 
+  displayBotSpecs = (bot) => {
+    this.setState({ collectionVisible: false })
+    this.setState({ botSpecs: bot })
+  }
+
   render() {
     return (
       <div>
         <BotArmy bots={this.state.botArmy} action={this.removeFromArmy} removeCard={this.removeBotPermanently} />
-        <BotCollection botCollection={this.state.botCollection} action={this.addToArmy} removeCard={this.removeBotPermanently} />
+        {this.state.collectionVisible
+          ? < BotCollection botCollection={this.state.botCollection} action={this.displayBotSpecs} removeCard={this.removeBotPermanently} />
+          : < BotSpecs bot={this.state.botSpecs} />
+        }
       </div>
 
     )

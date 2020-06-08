@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"
 
 const botTypeClasses = {
   Assault: "icon military",
@@ -7,7 +7,7 @@ const botTypeClasses = {
   Medic: "icon ambulance",
   Witch: "icon magic",
   Captain: "icon star"
-};
+}
 
 const BotSpecs = props => {
   return (
@@ -72,7 +72,7 @@ const BotSpecs = props => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default BotSpecs;
+export default BotSpecs
