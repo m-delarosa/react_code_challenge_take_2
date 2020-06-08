@@ -13,7 +13,7 @@ export default function BotCollection(props) {
     <div className="ui four column grid">
       <div className="row">
         {displayBotCards}
-          Collection of all bots
+          You have completed your Bot Army. There are no more bots to collect.
         </div>
     </div>
   )
