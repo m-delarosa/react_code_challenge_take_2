@@ -48,13 +48,17 @@ class BotsPage extends Component {
     this.setState({ botSpecs: bot })
   }
 
+  displayBotCollection = () => {
+    this.setState({ collectionVisible: true })
+  }
+
   render() {
     return (
       <div>
         <BotArmy bots={this.state.botArmy} action={this.removeFromArmy} removeCard={this.removeBotPermanently} />
         {this.state.collectionVisible
           ? < BotCollection botCollection={this.state.botCollection} action={this.displayBotSpecs} removeCard={this.removeBotPermanently} />
-          : < BotSpecs bot={this.state.botSpecs} />
+          : < BotSpecs bot={this.state.botSpecs} back={this.displayBotCollection} />
         }
       </div>
 
