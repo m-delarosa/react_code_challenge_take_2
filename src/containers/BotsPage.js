@@ -3,56 +3,49 @@ import BotCollection from './BotCollection'
 import BotArmy from './YourBotArmy'
 import BotSpecs from '../components/BotSpecs'
 
-
-
 class BotsPage extends Component {
-  //start here with your code for step one
-
   state = {
     botCollection: [],
+    filteredCollection: [],
     botArmy: [],
     collectionVisible: true,
     botSpecs: {},
-    botArmyClasses: [],
-    botArmyIds: []
   }
 
   componentDidMount() {
     fetch('http://localhost:6001/bots')
       .then(response => response.json())
-      .then(bots => this.setState({ botCollection: bots }))
+      .then(bots => this.setState({ botCollection: bots, filteredCollection: bots }))
       .then(console.log("Bots Fetched!"))
   }
 
   addToArmy = (bot) => {
-    let newCollection = this.state.botCollection.filter(card => card.bot_class !== bot.bot_class)
+    const newCollection = this.state.filteredCollection.filter(card => card.bot_class !== bot.bot_class)
     this.setState({
-      botCollection: newCollection,
+      filteredCollection: newCollection,
       botArmy: [...this.state.botArmy, bot],
       collectionVisible: true,
-      botArmyClasses: [...this.state.botArmyClasses, bot.bot_class],
-      botArmyIds: [...this.state.botArmyIds, bot.id]
     })
   }
 
   removeFromArmy = (bot) => {
-    let newArmy = this.state.botArmy.filter(card => card !== bot)
-    this.componentDidMount()
-    let newCollection = this.state.botCollection.filter(card => this.state.botArmyIds.includes(card.id) === false)
-    // Not sure how to make the expression below work the way I want it to:
-    // I want it to filter the botCollection and check each id against each id in the botArmy and filter matches out. 
-    // Do I need to create new state that hold the id numbers that just holds the current ids of bots in the bot army?
-    // this.setState({ botArmy: newArmy, botCollection: [this.state.botCollection.filter(card => card.id !== )] })
-    // Or maybe I create an initial bot collection state or variable that doesn't change, and use it to refilter over and over.
-    this.setState({ botArmy: newArmy, botCollection: newCollection })
-    console.log("New collection filtered.")
+    const newArmy = this.state.botArmy.filter(card => card.id !== bot.id)
+    const armyClasses = newArmy.map(bot => bot.bot_class)
+    const newCollection = this.state.botCollection.filter(bot => {
+      console.log("Filter:", !armyClasses.includes(bot.bot_class))
+      return !armyClasses.includes(bot.bot_class)
+    })
+    console.log("newCollection", newCollection)
+
+    this.setState({ botArmy: newArmy, filteredCollection: newCollection })
   }
 
   removeBotPermanently = (bot) => {
     let newCollection = this.state.botCollection.filter(card => card !== bot)
+    let newFilteredCollection = this.state.filteredCollection.filter(card => card !== bot)
     let newArmy = this.state.botArmy.filter(card => card !== bot)
 
-    this.setState({ botCollection: newCollection, botArmy: newArmy })
+    this.setState({ botCollection: newCollection, filteredCollection: newFilteredCollection, botArmy: newArmy })
 
     fetch(`http://localhost:6001/bots/${bot.id}`, {
       method: 'DELETE'
@@ -61,8 +54,7 @@ class BotsPage extends Component {
   }
 
   displayBotSpecs = (bot) => {
-    this.setState({ collectionVisible: false })
-    this.setState({ botSpecs: bot })
+    this.setState({ collectionVisible: false, botSpecs: bot })
   }
 
   displayBotCollection = () => {
@@ -70,15 +62,25 @@ class BotsPage extends Component {
   }
 
   render() {
+    const { filteredCollection, botArmy, botSpecs, collectionVisible } = this.state
+
     return (
       <div>
-        <BotArmy bots={this.state.botArmy} action={this.removeFromArmy} removeCard={this.removeBotPermanently} />
-        {this.state.collectionVisible
-          ? < BotCollection botCollection={this.state.botCollection} action={this.displayBotSpecs} removeCard={this.removeBotPermanently} />
-          : < BotSpecs bot={this.state.botSpecs} back={this.displayBotCollection} enlist={this.addToArmy} />
+        <BotArmy
+          bots={botArmy}
+          action={this.removeFromArmy}
+          removeCard={this.removeBotPermanently} />
+        {collectionVisible
+          ? < BotCollection
+            botCollection={filteredCollection}
+            action={this.displayBotSpecs}
+            removeCard={this.removeBotPermanently} />
+          : < BotSpecs
+            bot={botSpecs}
+            back={this.displayBotCollection}
+            enlist={this.addToArmy} />
         }
       </div>
-
     )
   }
 }

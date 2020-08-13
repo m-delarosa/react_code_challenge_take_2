@@ -13,11 +13,13 @@ const BotCard = props => {
   const { bot, action, removeCard } = props
 
   function handleClick(e) {
+    console.log("handleClick fired!")
     // e.stopPropagation()
     action(bot)
   }
 
   function handleDischarge(e) {
+    console.log("Red X Clicked!")
     e.stopPropagation()
     removeCard(bot)
   }
